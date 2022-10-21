@@ -5,12 +5,14 @@ import { Marker, Popup } from "react-leaflet";
 export const MarkerJob = (props) => {
   const [loc, SetLoc] = useState([props.data[0].lieuTravail.latitude,props.data[0].lieuTravail.longitude]);
   const [loaded, SetLoaded] = useState(false);
-
+  const city = props.city.substring(5,props.city.length)
+  
+  
   return (
-    loc[0]!==0 ? (
-      <Marker position={loc} key={props.id}>
+    loc[0]!==0 && (
+      <Marker position={loc} key={props.id} >
         <Popup>
-          <p>Il y a {props.data.length} Offres dans la commune de {props.city.substring(5,props.city.length)}</p>
+          <p>Il y a {props.data.length} Offres dans la commune de {city}</p>
           <ul>
             {props.data.map((el,index)=>{return <li key={index}>
               {el.intitule}<br/>
@@ -22,7 +24,7 @@ export const MarkerJob = (props) => {
           </ul>
         </Popup>
       </Marker>
-    ):(<></>)
+    )
   );
 };
 

@@ -1,11 +1,11 @@
 
-import {MapContainer,TileLayer,GeoJSON} from 'react-leaflet'
+import {MapContainer,TileLayer,GeoJSON,Popup} from 'react-leaflet'
 
 import "leaflet/dist/leaflet.css";
 
-// @ts-ignore
+
 import React,{ useState,useEffect } from 'react'
-import {MarkerJob} from "./component/markerJob"
+import {MarkerJob} from "./component/markerJobByCommunes"
 import './App.css'
 import data from "./assets/import.json";
 import commune from "./assets/communes.json"
@@ -25,6 +25,7 @@ console.log(cities)
 const marker = data.resultats.map((resultat) => {
   cities.map((city)=>{
     if(city.city == resultat.lieuTravail.libelle){
+      // @ts-ignore
       city.Data.push(resultat)
     }
   })
@@ -35,6 +36,30 @@ const marker = data.resultats.map((resultat) => {
 
 
 function MyMap() {
+
+ const  onEach = (feature, layer) => {
+    console.log(layer.feature)
+    let popupContent = ""
+  if(layer.feature.properties.libelle){
+    popupContent =
+    "<p>" +
+    layer.feature.properties.libelle+
+    "</p>";
+  }else{
+    popupContent =
+    "<p>" +
+    layer.feature.properties.nom_quartier +
+    "</p>";
+  }
+  
+
+
+
+    layer.bindPopup(popupContent);
+  };
+
+
+
   return (
     <MapContainer 
 // @ts-ignore
@@ -45,7 +70,8 @@ function MyMap() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
        {marker[0][0].Data&&marker[0].map((el, index) => {
-          return <MarkerJob key={index} data={el.Data} city={el.city}/>;
+          // @ts-ignore
+          return <MarkerJob  key={index} data={el.Data} city={el.city}/>;
         })} 
         
         <GeoJSON
@@ -56,7 +82,7 @@ function MyMap() {
             fillOpacity: 0.1,}}
           key="commune"
           data={commune}
-          /* onEachFeature={onEachContry} */
+          onEachFeature={onEach}
         />
         <GeoJSON
           // @ts-ignore
@@ -66,8 +92,9 @@ function MyMap() {
             fillOpacity: 0.1,}}
           key="quartiers"
           data={quartiers}
-          /* onEachFeature={onEachContry} */
-        />
+          onEachFeature={onEach}
+     
+          />
     </MapContainer>
   )
 }
