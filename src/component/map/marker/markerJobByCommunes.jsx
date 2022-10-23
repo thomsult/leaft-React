@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Marker, Popup } from "react-leaflet";
 
-import JobLoc from "../assets/Siret.json";
+import JobLoc from "../../../assets/Siret.json";
 
 ///ATTENTION LE MAL DE CRANE VA ARRIVER!!!
 
@@ -59,9 +59,9 @@ const Job = (props) => {
     }
   }
 
-  console.log(props, p);
+  //console.log(props, p);
   return (
-    props.Offre && (
+    props.Offre[0] && (
       <Marker position={p} icon={iconWork}>
         <Popup>
           <h3>
@@ -158,7 +158,7 @@ const MarkerToulouse = (props) => {
     list.push([key, value]);
   }
 
-  console.log(props.city, list);
+  //console.log(props.city, list);
   return list.map(([name, el], index) => (
     <Job key={index} name={name} city={props.city} {...el}></Job>
   ));

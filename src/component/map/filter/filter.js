@@ -13,8 +13,8 @@ export const experienceExige = ["ALL", "D", "E"]
  * @param item - the item to be filtered
  * @param [contrat=ALL] - The type of contract you want to filter by.
  */
-export const filterByTypeContrat = (item, contrat = "ALL") => {
-    return contrat == "ALL" ? item : item.typeContrat === contrat
+export const filterByTypeContrat = (item, contrat = null) => {
+    return contrat == null ? item : item.typeContrat === contrat
 }
 
 
@@ -26,8 +26,8 @@ export const filterByTypeContrat = (item, contrat = "ALL") => {
  * @returns the item if the alternance is equal to "ALL" or if the item.alternance is equal to
  * alternance.
  */
-export const filterByAlternance = (item, alternance = "ALL") => {
-    return alternance == "ALL" ? item : item.alternance.toString() == alternance
+export const filterByAlternance = (item, alternance = null) => {
+    return alternance == null ? item : item.alternance.toString() == alternance
 }
 
 
@@ -36,8 +36,8 @@ export const filterByAlternance = (item, alternance = "ALL") => {
  * @param item - the current item in the array
  * @param [experienceExige=ALL] - The experience level that the user has selected.
  */
-export const filterByExperienceExige = (item, experienceExige = "ALL") => {
-    return experienceExige == "ALL" ? item : item.experienceExige == experienceExige
+export const filterByExperienceExige = (item, experienceExige = null) => {
+    return experienceExige == null ? item : item.experienceExige == experienceExige
 }
 
 
@@ -48,10 +48,14 @@ export const filterByExperienceExige = (item, experienceExige = "ALL") => {
  * @param item - The item that we are searching for.
  * @param [value=ALL] - The value of the search input
  */
-export const Search = (item, value = "ALL") => {
-    if (typeof (value) == "string") {
+export const SearchValue = ()=>{
+
+}
+
+export const Search = (item, value = null) => {   
+    if (value && typeof (value) == "string" && value.trim() !== '') {
         const regex = new RegExp(value, 'i')
-        return value == "ALL" ? item : item.description.match(regex)
+        return item.description.match(regex)
     } else {
         return item
     }
