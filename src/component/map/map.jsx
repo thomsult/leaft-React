@@ -8,15 +8,9 @@ import React,{createContext, useContext, useState} from "react";
 import commune from "../../assets/communes.json";
 import quartiers from "../../assets/quartierslocale.json";
 
-import ServiceMap from "./serviceMap";
+import ServiceMap from "./service/serviceMap";
 
-import { BoutonMap } from "./bouton/bouton";
-
-/* OpenStreetMap
-  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-       
-   */
+import { BoutonMap } from "../searchBar/bouton/bouton";
 
 const access_token = import.meta.env.VITE_ACCESS_TOKEN;
 const produc = import.meta.env.VITE_PRODUCTION | "false";
@@ -27,15 +21,10 @@ const mapConfig = {
 };
 
 
-export const MapContext = createContext(null);
+
 
 export const MyMap = (props) => {
-const mapFilter = {
-  typeDeContract: null,
-  alternance: null,
-  experienceExige: null,
-  searchValue: null,
-}
+
 
 
   const onEachZone = (zone, layer) => {
@@ -46,7 +35,7 @@ const mapFilter = {
   };
 
   return (
-    <MapContext.Provider value={mapFilter}>
+
       
       <MapContainer
         // @ts-ignore
@@ -96,6 +85,5 @@ const mapFilter = {
           onEachFeature={onEachZone}
         />
       </MapContainer>
-    </MapContext.Provider>
   );
 }

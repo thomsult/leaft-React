@@ -1,13 +1,19 @@
 
 import React from "react";
 import {MyMap} from "./component/map/map";
+
+
+
 import "./App.css";
+import { MapContext,MapContextDefault } from "./component/utils/mapContext";
 function App() {
   return (
     <div className="App">
-      <MyMap />
+          <MapContext.Provider value={MapContextDefault}>
+          <MyMap />
+          </MapContext.Provider>
+    
     </div>
   );
 }
-//<Locations data={MyData} />
 export default App;

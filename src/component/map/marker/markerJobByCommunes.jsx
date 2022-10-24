@@ -2,38 +2,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Marker, Popup } from "react-leaflet";
-
 import JobLoc from "../../../assets/Siret.json";
+import {filterByEntreprise} from "../filter/filterByEntreprise"
+
 
 ///ATTENTION LE MAL DE CRANE VA ARRIVER!!!
 
 import L from "leaflet";
 
-const iconWork = L.icon({
-  iconUrl: "/vite.svg",
+const iconPoleEmploi = L.icon({
+  iconUrl: "/pole-emploi-logo-vector.svg",
   iconSize: [25, 25],
   iconAnchor: [6, 6],
   popupAnchor: [0, 0],
 });
 
-const iconCity = L.icon({
-  iconUrl: "/vite.svg",
-  iconSize: [55, 55],
-  iconAnchor: [25, 30],
-  popupAnchor: [0, 0],
-});
 
-const iconStandard = (State) => {
-  const iconCity = L.icon({
-    iconUrl: "/pole-emploi-logo-vector.svg",
-    iconSize: !State ? [25, 25] : [0, 0],
-    iconAnchor: [6, 6],
-    popupAnchor: [0, 0],
-  });
-  return iconCity;
-};
 
-const Job = (props) => {
+
+const MarkerJob = (props) => {
   let p = [43.607182, 1.452805];
   if (props.Loc !== undefined) {
     if (props.Loc.geometry?.coordinates !== undefined) {
@@ -62,7 +49,7 @@ const Job = (props) => {
   //console.log(props, p);
   return (
     props.Offre[0] && (
-      <Marker position={p} icon={iconWork}>
+      <Marker position={p} >
         <Popup>
           <h3>
             {props.name == "Noncomuniquer" ? "Non Renseigné" : props.name}
@@ -93,76 +80,15 @@ const Job = (props) => {
 
 //[]
 
+
+
+
 const MarkerToulouse = (props) => {
-  const JobByEntreprise = { Noncomuniquer: { Offre: [] } };
-  props.data.forEach((el) => {
-    if (el.entreprise.nom !== undefined) {
-      if (JobByEntreprise[el.entreprise.nom] === undefined) {
-        let loc = [];
-        JobLoc.forEach((entreprise) => {
-          if (entreprise.parameters.q == el.entreprise.nom) {
-            loc = entreprise.records.filter(
-              (param) => param.fields.etatadministratifetablissement !== "Fermé"
-            );
-          }
-        });
 
-        let LocRecents =
-          loc.length > 1
-            ? loc.reduce((a, b) => {
-                if (a.fields !== undefined) {
-                  return new Date(a.fields.datedebutetablissement) >
-                    new Date(b.fields.datedebutetablissement)
-                    ? a
-                    : b;
-                }
-              })
-            : {
-                geometry: {
-                  coordinates: loc[0] || [
-                    el.lieuTravail.latitude,
-                    el.lieuTravail.longitude,
-                  ],
-                },
-              };
-
-        Object.defineProperty(JobByEntreprise, el.entreprise.nom, {
-          value: { Offre: [el], Loc: LocRecents.geometry.coordinates },
-          writable: true,
-          enumerable: true,
-          configurable: true,
-        });
-      } else {
-        JobByEntreprise[el.entreprise.nom].Offre.push(el);
-      }
-    } else {
-      JobByEntreprise.Noncomuniquer.Offre.push(el);
-    }
-  });
-
-  const list = [];
-
-  /*  if(value.length > 0){
-  list.push(value)
-  
-}
- */
-
-  for (const [key, value] of Object.entries(JobByEntreprise)) {
-    let loc = [0, 0];
-    try {
-      loc = value.Loc.geometry.coordinates;
-    } catch (error) {
-      loc = value.Loc;
-    }
-    list.push([key, value]);
-  }
-
-  //console.log(props.city, list);
-  return list.map(([name, el], index) => (
-    <Job key={index} name={name} city={props.city} {...el}></Job>
-  ));
-};
+    return filterByEntreprise(props,JobLoc).map(([name, el], index) => (
+      <MarkerJob key={index} name={name} city={props.city} {...el}/>
+    ));
+  };
 
 export const MarkerJobList = (props) => {
   if (props.data[0] !== undefined) {
@@ -176,7 +102,7 @@ export const MarkerJobList = (props) => {
     return props.city.includes("TOULOUSE") ? (
       <MarkerToulouse {...props} />
     ) : (
-      <Marker position={loc} icon={iconStandard()}>
+      <Marker position={loc} icon={iconPoleEmploi}>
         <Popup>
           <img
             src="/pole-emploi-logo-vector.svg"
