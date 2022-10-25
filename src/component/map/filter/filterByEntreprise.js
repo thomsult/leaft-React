@@ -1,4 +1,5 @@
 export const filterByEntreprise = (props,JobLoc) =>{
+///ATTENTION LE MAL DE CRANE VA ARRIVER!!!
 
     const JobByEntreprise = { Noncomuniquer: { Offre: [] } };
     props.data.forEach((el) => {
@@ -47,12 +48,7 @@ export const filterByEntreprise = (props,JobLoc) =>{
     });
   
     const list = [];
-  
-    /*  if(value.length > 0){
-    list.push(value)
-    
-  }
-   */
+
   
     for (const [key, value] of Object.entries(JobByEntreprise)) {
       let loc = [0, 0];

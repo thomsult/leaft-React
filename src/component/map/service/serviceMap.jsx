@@ -25,13 +25,7 @@ const context = useContext(MapContext)
 const [Filter,setFilter] = useState(context)
 
 
-
-context.SetSearchValue = (e)=>setFilter({...Filter,searchValue:e})
-context.SetContract = (e)=>setFilter({...Filter,typeDeContract:e})
-context.SetAlternance = (e)=>setFilter({...Filter,alternance:e})
-context.SetExperienceExige = (e)=>setFilter({...Filter,experienceExige:e})
-
-
+context.SetSearchValue = (e)=>{setFilter(e) ;console.log(e)}
 
 
 const FilterMap = (array)=>{

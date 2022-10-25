@@ -6,7 +6,7 @@ import JobLoc from "../../../assets/Siret.json";
 import {filterByEntreprise} from "../filter/filterByEntreprise"
 
 
-///ATTENTION LE MAL DE CRANE VA ARRIVER!!!
+
 
 import L from "leaflet";
 

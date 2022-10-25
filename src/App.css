@@ -26,6 +26,7 @@ body {
 }
 .leaflet-interactive{
 	transition: .5s ease-in-out;
+	outline: none;
 	fill-opacity: 0;
 	transform: translate3d(0px, 0px, 0px);
 }

@@ -42,7 +42,7 @@ export const MyMap = (props) => {
         center={mapConfig}
         zoom={18}
       >
-        <BoutonMap></BoutonMap>
+        <BoutonMap/>
         <ServiceMap/>
         {produc == "True" ? (
           <TileLayer
