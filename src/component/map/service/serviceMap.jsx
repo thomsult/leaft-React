@@ -53,7 +53,7 @@ const DataByLieuTravail = (city,array)=>{
   })
 
 
-console.log(cities,Filter.searchValue)
+//console.log(cities,Filter.searchValue)
   return cities.length>0 && 
   // @ts-ignore
   cities.map((el, index) => <MarkerJobList key={index} data={el.Data} city={el.city} />)

@@ -34,6 +34,17 @@ body {
 	fill-opacity: 0.5;
 	transform: translate3d(0, -10px, -10px);
 }
+
+.leaflet-marker-icon:not(.leaflet-marker-icon[src="/pole-emploi-logo-vector.svg"]):hover{
+	opacity: 0.8;
+	animation: bounce 0.7s ease infinite;
+}
+@keyframes bounce{
+	from {translate: 0px;}
+	50%  {translate: 0 -10px;}
+	to   {translate: 0px;}
+}
+	
 /* .leaflet-div-icon {
   background: transparent;
   border: none;

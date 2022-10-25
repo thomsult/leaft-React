@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup,Tooltip } from "react-leaflet";
 import JobLoc from "../../../assets/Siret.json";
 import {filterByEntreprise} from "../filter/filterByEntreprise"
 
@@ -19,63 +19,71 @@ const iconPoleEmploi = L.icon({
 
 
 
+const MarkerJob = ({name,city ,Offre,Loc =[0,0]}) => {
+let src = ""
+let icon = {}
+const partenaire = "/pole-emploi-logo-vector.svg"
+if(name == "Noncomuniquer"){
+  Loc =[43.605043,1.433195]
+  name="Pas de Nom d'entreprise"
+  src = "/pole-emploi-logo-vector.svg"
+  icon = {icon : iconPoleEmploi}
+}
+try {
+  src = Offre[0].entreprise.logo
+} catch (error) {
+  src = "/pole-emploi-logo-vector.svg"
+}
+if(name == "Pas de Localisation"){
+  src = "/pole-emploi-logo-vector.svg"
+  icon = {icon : iconPoleEmploi}
+}
+  //ul a refaire peut être plus dynamic
+  //tous comme les image je recupere que sur l'index 0
+ console.log(Offre)
+    return (Offre[0]&&
+      <Marker position={Loc}  {...icon}>
+        <Tooltip>{name}</Tooltip>
+    <Popup>
+      <h3>
+        {name}
+      </h3>
+      <p>
+        <i>{city}</i>
+      </p>
+      {src&&<img
+        src={src}
+        alt={`Logo ${name}`}
+        style={{ height: "50px", width: "auto" }}
+      />}
 
-const MarkerJob = (props) => {
-  let p = [43.607182, 1.452805];
-  if (props.Loc !== undefined) {
-    if (props.Loc.geometry?.coordinates !== undefined) {
-      if (props.Loc.geometry.coordinates[1] > 42) {
-        p = [
-          props.Loc.geometry.coordinates[1],
-          props.Loc.geometry.coordinates[0],
-        ];
-      } else {
-        p = [
-          props.Loc.geometry.coordinates[0],
-          props.Loc.geometry.coordinates[1],
-        ];
-      }
-    } else {
-      if (props.Loc.length == 2 && props.Loc[1] > 42) {
-        p = [props.Loc[1], props.Loc[0]];
-      } else if (props.Loc.length == 2 && props.Loc[1] < 42) {
-        p = [props.Loc[0], props.Loc[1]];
-      } else {
-        p = [43.604082, 1.433805];
-      }
-    }
-  }
+      <ul>
+        {Offre.map((el, index) => (index<6&&
+          <li key={index}>{el.intitule}<br />
+          {name == "Pas de Localisation"&&<small>{el.entreprise.nom}</small>}
+          
+          
+          </li>
+        ))}
 
-  //console.log(props, p);
-  return (
-    props.Offre[0] && (
-      <Marker position={p} >
-        <Popup>
-          <h3>
-            {props.name == "Noncomuniquer" ? "Non Renseigné" : props.name}
-          </h3>
-          <p>
-            <i>{props.city}</i>
-          </p>
+        {Offre.length > 6&&<p>il reste {Offre.length-6} annonces</p>}
+      </ul>
+
+      {Offre[0]&&Offre[0].origineOffre.partenaires&&Offre[0].origineOffre.partenaires.map((el, index) => (
           <img
-            src={
-              props.Offre[0].entreprise.logo
-                ? props.Offre[0].entreprise.logo
-                : "/pole-emploi-logo-vector.svg"
-            }
-            alt="logo"
-            style={{ height: "50px", width: "auto" }}
-          />
+          key={index}
+        src={el.logo}
+        alt={el.nom}
+        style={{ height: "50px", width: "auto" }}
+      />
+        ))}
+      
+    </Popup>
+  </Marker>
+     );
 
-          <ul>
-            {props.Offre.map((el, index) => (
-              <li key={index}>{el.intitule}</li>
-            ))}
-          </ul>
-        </Popup>
-      </Marker>
-    )
-  );
+ 
+  
 };
 
 //[]
@@ -84,10 +92,23 @@ const MarkerJob = (props) => {
 
 
 const MarkerToulouse = (props) => {
+//console.log(filterByEntreprise(props,JobLoc))
+    return filterByEntreprise(props,JobLoc)
+    .map(([name, el], index) => {
+      if(name == "NoLocation"){
+      const newP = []
+      el.forEach(([name,{Offre}])=>{
+        newP.push(Offre)
+      })
 
-    return filterByEntreprise(props,JobLoc).map(([name, el], index) => (
-      <MarkerJob key={index} name={name} city={props.city} {...el}/>
-    ));
+        return (<MarkerJob key={index} name={"Pas de Localisation"} city={props.city} Offre={newP.flat()} Loc={[43.599043,1.433195]}/>)
+      }else{
+        return (<MarkerJob key={index} name={name} city={props.city} Offre={el.Offre} Loc={el.Loc}/>)
+      }
+      
+    }
+      
+    );
   };
 
 export const MarkerJobList = (props) => {
@@ -103,6 +124,9 @@ export const MarkerJobList = (props) => {
       <MarkerToulouse {...props} />
     ) : (
       <Marker position={loc} icon={iconPoleEmploi}>
+        <Tooltip><p>
+            <strong>{props.data.length}</strong> Offres à <strong>{city}</strong>
+          </p></Tooltip>
         <Popup>
           <img
             src="/pole-emploi-logo-vector.svg"
